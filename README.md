@@ -22,3 +22,25 @@ docker exec -it mysql1 mysql -uroot -p
 
 #### OBS: troque a palavra 'password' pela senha desejada.
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
+
+### Verifique o acesso do user ao db
+mysql> SELECT host, user FROM mysql.user;
+
+Procure pelo resultado abaixo:
++-----------+---------------+
+| host      | user          |
++-----------+---------------+
+| %         | root          |
+
+Caso o acesso root'@' não apareça na tabela execute o comando abaixo:
+Caso você esteja rodando um projeto real verifique o nível de segurança adequado!
+
+GRANT ALL ON *.* to root@'%' IDENTIFIED BY 'password';
+
+
+## Clone este projeto para sua máquina e execute os comandos abaixo:
+bundle exec rake db:drop
+bundle exec rake db:create
+bundle exec rake db:migrate
+
+
