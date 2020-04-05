@@ -2,6 +2,8 @@
 
 ## Faça a instalação do MySQL através do Docker
 ### Pré-requisito:necessária ter o docker instalado
+OBS: caso prefira veja as instruções completas no link abaixo:
+https://hub.docker.com/r/mysql/mysql-server/
 
 ### Download e instalação da imagem
 docker pull mysql/mysql-server:5.7.24
@@ -20,4 +22,3 @@ docker exec -it mysql1 mysql -uroot -p
 
 #### OBS: troque a palavra 'password' pela senha desejada.
 mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
-
