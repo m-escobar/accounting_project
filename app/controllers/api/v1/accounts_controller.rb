@@ -2,8 +2,13 @@ class Api::V1::AccountsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
-
-    render json: { balance: 0 }
+    account_id = balance_params[:id].to_i
+    unless account_id > 0
+      return render json: { error: 'Informar um ID de conta válido para consulta.' }
+    else
+      account = Account.where(custom_id: account_id).first
+      render json: { account: account.balance }
+    end
   end
 
   def create
@@ -59,5 +64,9 @@ class Api::V1::AccountsController < ApplicationController
 
   def account_params
     params.permit(:id, :name, :balance)
+  end
+
+  def balance_params
+    params.permit(:id)
   end
 end
