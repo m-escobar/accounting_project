@@ -18,16 +18,14 @@ class Api::V1::AccountsController < ApplicationController
     account_balance = acc_params[:balance].to_i
 
     if !custom_id.nil?
-      custom_id = acc_params[:id].to_i
-      # api_message(:error, 'ID deve ser um número') and return if custom_id == 0
+      custom_id = acc_params[:id]
       return render json: { error: 'ID deve ser um número.' } if custom_id == 0
 
-      account = Account.where(custom_id: custom_id).first
+      account = Account.where(account_id: custom_id).first
       return render json: { customer: 'ID já está em uso, por favor escolha outro.' } unless account.nil?
     end
 
-    custom_id = custom_id || account
-    create_account(custom_id, account_name, account_balance)
+    create_account(account_name, account_balance, custom_id)
   end
 
   def transfer
@@ -36,30 +34,36 @@ class Api::V1::AccountsController < ApplicationController
 
 
   private
-  def api_message(type = :msg, msg)
-    # render json: { type: msg }
-    render json: { customer: 'ID já está em uso, por favor escolha outro.' }
+  def api_message(msg, type = :msg)
+    render json: { type: msg }
+    # render json: { customer: 'ID já está em uso, por favor escolha outro.' }
     # exit
   end
 
-  def create_account(custom_id = nil, account_name, account_balance)
+  def create_account(account_name, account_balance, account_id = nil)
     customer = Customer.new
     customer.name = account_name
-
+binding.pry
     unless customer.save!
       return render json: { error: 'erro ao criar cliente' }
     end
 
-    account = Account.new
-    account.custom_id = custom_id unless custom_id.nil?
-    account.customer_id = customer.id
-    account.balance = account_balance
+    @account = Account.new
+    @account.account_id = account_id.to_i.to_s unless account_id.nil?
+    @account.customer_id = customer.id
+    @account.balance = account_balance
 
-    if account.save!
-      return render json: { id: customer.id, token: 'tok' }
+    if @account.save!
+      set_account_id if account_id.nil?
+      return render json: { id: @account.account_id, token: 'tok' }
     else
       return render json: { error: 'erro ao criar conta' }
     end
+  end
+
+  def set_account_id
+    @account.account_id = @account.id += 'x'
+    @account.save
   end
 
   def account_params
