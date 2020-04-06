@@ -2,13 +2,9 @@ class Api::V1::AccountsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
-    account_id = balance_params[:id].to_i
-    unless account_id > 0
-      return render json: { error: 'Informar um ID de conta válido para consulta.' }
-    else
-      account = Account.where(custom_id: account_id).first
-      render json: { account: account.balance }
-    end
+    account_id = balance_params[:id]
+    account = Account.where(account_id: account_id).first
+    render json: account.nil? ? { error: 'Informar um ID de conta válido para consulta.' } : { account: account.balance }
   end
 
   def create
@@ -43,7 +39,7 @@ class Api::V1::AccountsController < ApplicationController
   def create_account(account_name, account_balance, account_id = nil)
     customer = Customer.new
     customer.name = account_name
-binding.pry
+
     unless customer.save!
       return render json: { error: 'erro ao criar cliente' }
     end
@@ -62,7 +58,7 @@ binding.pry
   end
 
   def set_account_id
-    @account.account_id = @account.id += 'x'
+    @account.account_id = @account.id.to_s + 'x'
     @account.save
   end
 
