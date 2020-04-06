@@ -40,18 +40,18 @@ class Api::V1::AccountsController < ApplicationController
   def create_account(custom_id = nil, account_name, account_balance)
     customer = Customer.new
     customer.name = account_name
-binding.pry
+
     unless customer.save!
       return render json: { error: 'erro ao criar cliente' }
     end
 
     account = Account.new
-    account.id = account_id unless account_id.nil?
-    account.name = customer
+    account.custom_id = custom_id unless custom_id.nil?
+    account.customer_id = customer.id
     account.balance = account_balance
 
-    unless account.save!
-      return render json: { id: customer.id }
+    if account.save!
+      return render json: { id: customer.id, token: 'tok' }
     else
       return render json: { error: 'erro ao criar conta' }
     end
