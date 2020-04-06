@@ -76,7 +76,7 @@ class Api::V1::AccountsController < ApplicationController
 
     if @account.save!
       set_account_id if account_id.nil?
-      return render json: { id: @account.account_id, token: 'tok' }
+      return render json: { id: @account.account_id, token: customer.access_token }
     else
       return render json: { error: 'erro ao criar conta' }
     end
