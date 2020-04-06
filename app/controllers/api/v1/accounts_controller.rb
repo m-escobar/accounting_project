@@ -1,5 +1,6 @@
 class Api::V1::AccountsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action      :authorize
 
   def show
     account_id = balance_params[:id]
