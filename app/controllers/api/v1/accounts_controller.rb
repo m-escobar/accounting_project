@@ -25,11 +25,36 @@ class Api::V1::AccountsController < ApplicationController
   end
 
   def transfer
-    render json: { transfer: 0 }
+    transfer = transfer_params
+    @amount = transfer[:amount].to_i
+
+    return render json: { error: 'Informar valor a ser transferido.' } if @amount <= 0
+
+    @origin_account = Account.where(account_id: transfer[:source]).first
+    return render json: { error: 'Conta de origem inválida.' } if @origin_account.nil?
+
+    @target_account = Account.where(account_id: transfer[:destination]).first
+    return render json: { error: 'Conta de destino inválida.' } if @target_account.nil?
+
+    return render json: { error: 'Saldo insuficiente.' } if @origin_account.balance < @amount
+
+    execute_transfer
+
+    render json: { message: 'Transação efetuada.' }
   end
 
 
   private
+  def execute_transfer
+    @origin_account.balance -= @amount
+    @target_account.balance += @amount
+
+    Account.transaction do
+      @origin_account.save!
+      @target_account.save!
+    end
+  end
+
   def api_message(msg, type = :msg)
     render json: { type: msg }
     # render json: { customer: 'ID já está em uso, por favor escolha outro.' }
@@ -68,5 +93,9 @@ class Api::V1::AccountsController < ApplicationController
 
   def balance_params
     params.permit(:id)
+  end
+
+  def transfer_params
+    params.permit(:source, :destination, :amount)
   end
 end
