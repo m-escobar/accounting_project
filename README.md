@@ -16,7 +16,15 @@ docker ps
 * bundle exec rake db:create
 * bundle exec rake db:migrate
 
-Execute o rails e faça as chamdas da api conforme abaixo. Caso prefira está incluso na raiz do projeto o arquivo 'Insomnia_accounting.json' que pode ser importado no Insomnia e contém os exemplos de chamadas.
+### TDD
+Inclusos alguns testes, como exemplos, para garantir o funcionamento do sistema.
+Para executar os testes apenas rode o comando abaixo:
+#### bundle exec rspec
+
+### Rodando o projeto
+#### rails s
+
+Execute o rails e faça as chamadas da api conforme abaixo. Caso prefira está incluso na raiz do projeto o arquivo 'Insomnia_accounting.json' que pode ser importado no Insomnia e contém os exemplos de chamadas.
 
 O projeto possui as seguintes funcionalidades:
 - Criar Conta (post)
