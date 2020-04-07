@@ -12,9 +12,9 @@ sudo docker run --name mysqlsrv -e MYSQL_ROOT_PASSWORD=1234 -d mysql:latest
 docker ps
 
 ## Clone este projeto para sua máquina e execute os comandos abaixo:
-bundle exec rake db:drop
-bundle exec rake db:create
-bundle exec rake db:migrate
+* bundle exec rake db:drop
+* bundle exec rake db:create
+* bundle exec rake db:migrate
 
 Execute o rails e faça as chamdas da api conforme abaixo. Caso prefira está incluso na raiz do projeto o arquivo 'Insomnia_accounting.json' que pode ser importado no Insomnia e contém os exemplos de chamadas.
 
