@@ -1,13 +1,16 @@
 require 'rails_helper'
+require 'pry'
 
-describe Accounts, :type => :model do
-  let(:customer) { Customer.new(name: 'Julia Ana') }
-binding.pry
-  it 'creates account with params' do
-    expect(Accounts.new(customer: customer.id)).to be_valid
-  end
+describe Api::V1::AccountsController, :type => :controller do
+  describe 'GET create' do
+    it 'create account' do
+      params = {:account_name=>'Julia Ana', :initial_amount=>20000}
 
-  it 'creates account fail w/o params' do
-    expect(Accounts.new).to_not be_valid
+      post :create, params: params
+      result = JSON.parse response.body
+
+      expect(result['account_id']).to be_present
+      expect(result['token']).to be_present
+    end
   end
 end
