@@ -9,7 +9,7 @@ class Api::V1::AccountsController < ApplicationController
     if account.nil?
       api_message('Informar um ID de conta válido para consulta.')
     else
-     api_message(account.balance, type = :account)
+     api_message(account.balance, type = :balance)
     end
   end
 
