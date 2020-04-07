@@ -1,22 +1,23 @@
 class ApplicationController < ActionController::Base
 
   def authorize
-    if valid_customer && (valid_customer.ensure_token?(@header_access_token))
+    if valid_customer?
       return true
     else
       authorization_denied
     end
   end
 
-  def valid_customer
-    @header_access_token ||= request.headers['X-Client-Access-Token']
-    raise InvalidTokenException if @header_access_token.blank? && @customer.blank?
-    @customer ||= Customer.find_by!(access_token: @header_access_token)
+private
+  def valid_customer?
+    @access_token = request.headers['X-Client-Access-Token']
+    customer = Customer.where(access_token: @access_token).empty? ? false : true
+    customer
   end
 
 protected
   def authorization_denied
-    render json: { error: 'Acesso negado' }, status: :forbidden and return
+    render json: { Erro: 'Acesso negado' }, status: :forbidden and return
   end
 
 end
